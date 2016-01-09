@@ -1,0 +1,234 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<style> 
+body{ 
+ 	width: 100%; 
+ 	height: 100%; 
+ 	overflow: hidden; 
+ 	background-color: #777; 
+ } 
+ .domino { 
+ 	position: relative; 
+     border: 4px solid #000; 
+     border-radius: 10px; 
+     background-color: #fff; 
+ } 
+ .circle { 
+     height: 20px; 
+     width: 20px; 
+     border-radius:20px; 
+     background-color: #000; 
+ } 
+ </style> 
+ </head> 
+ <body> 
+ <div id="stage"> 
+ </div> 
+ 
+ 
+ 
+ 
+ <script type="text/javascript"> 
+  
+ 	/** START - Domino face class **/ 
+ 	function DominoFace(elemPos){ 
+ 		this.face = document.createElement("div"); 
+ 		this.face.style.width = "100px"; 
+ 		this.face.style.height = "100px"; 
+ 		this.face.style.position = "relative"; 
+ 		if(elemPos == "top"){ 
+ 			this.face.style.borderBottom = "thin solid #000"; 
+ 		}else{ 
+ 			this.face.style.borderTop = "thin solid #000"; 
+ 		} 
+ 		this.refresh(); 
+ 		return this; 
+ 	} 
+ 	 
+ 	DominoFace.prototype.getDisplay = function(){ 
+ 		return this.face; 
+ 	} 
+ 	 
+ 	DominoFace.prototype.refresh = function(){ 
+ 		//num determines the number of dots on the face 
+ 		var num = Math.floor(Math.random() * 7); 
+ 		var myNode = this.face; 
+ 		//remove previous dots 
+ 		while (myNode.firstChild) { 
+ 		    myNode.removeChild(myNode.firstChild); 
+ 		} 
+ 		//add dots onto domino face 
+ 		switch(num){ 
+ 			case 0: 
+ 			break; 
+ 			case 1: 
+ 				createDot(this.face, (parseInt(this.face.style.width) - 10)/2 - 4, (parseInt(this.face.style.height) - 10)/2 - 4); 
+ 				break; 
+ 			case 2: 
+ 				createDot(this.face, (parseInt(this.face.style.width) - 20 - 8), 8); 
+ 				createDot(this.face, 8, (parseInt(this.face.style.height) - 20 - 8));				 
+ 				break; 
+ 			case 3: 
+ 				createDot(this.face, (parseInt(this.face.style.width) - 20 - 8), 8); 
+ 				createDot(this.face, (parseInt(this.face.style.width)- 20)/2, (parseInt(this.face.style.height) - 20)/2); 
+ 				createDot(this.face, 8, (parseInt(this.face.style.height) - 20 - 8)); 
+ 			break; 
+ 			case 4: 
+ 				createDot(this.face, (parseInt(this.face.style.width) - 20 - 8), 8); 
+ 				createDot(this.face, 8, 8); 
+ 				 
+ 				createDot(this.face, 8, (parseInt(this.face.style.height) - 20 - 8)); 
+ 				createDot(this.face, (parseInt(this.face.style.height) - 20 - 8), (parseInt(this.face.style.height) - 20 - 8)); 
+ 			break; 
+ 			case 5: 
+ 				createDot(this.face, (parseInt(this.face.style.width) - 20 - 8), 8); 
+ 				createDot(this.face, 8, 8); 
+ 				createDot(this.face, (parseInt(this.face.style.width)- 20)/2, (parseInt(this.face.style.height) - 20)/2); 
+ 				createDot(this.face, 8, (parseInt(this.face.style.height) - 20 - 8)); 
+ 				createDot(this.face, (parseInt(this.face.style.height) - 20 - 8), (parseInt(this.face.style.height) - 20 - 8)); 
+ 			break; 
+ 			case 6: 
+ 				createDot(this.face, (parseInt(this.face.style.width) - 20 - 8), 8); 
+ 				createDot(this.face, 8, 8); 
+ 				 
+ 				createDot(this.face, (parseInt(this.face.style.width) - 20 - 8), (parseInt(this.face.style.width)- 20)/2); 
+ 				createDot(this.face, 8, (parseInt(this.face.style.width)- 20)/2); 
+ 				 
+ 				createDot(this.face, 8, (parseInt(this.face.style.height) - 20 - 8)); 
+ 				createDot(this.face, (parseInt(this.face.style.height) - 20 - 8), (parseInt(this.face.style.height) - 20 - 8)); 
+ 			break; 
+ 		} 
+ 	}; 
+ 	/** END - Domino face class **/ 
+ 	 
+ 	 
+ 	/** START - Domino class **/ 
+ 	function Domino(){ 
+ 		this.domino = document.createElement("div"); 
+ 		this.domino.style.width = "100px"; 
+ 		this.domino.style.height = "200px"; 
+ 		this.domino.className = "domino"; 
+ 		 
+ 		this.domino.face1 = new DominoFace("top"); 
+ 		this.domino.face2 = new DominoFace(); 
+ 		this.domino.appendChild(this.domino.face1.getDisplay()); 
+ 		this.domino.appendChild(this.domino.face2.getDisplay()); 
+ 		this.domino.onclick = function(){ 
+ 			this.face1.refresh(); 
+ 			this.face2.refresh(); 
+ 		} 
+ 		return this; 
+ 	} 
+ 	 
+ 	Domino.prototype.getDisplay = function(){ 
+ 		return this.domino; 
+ 	} 
+ 	/** END - Domino class **/ 
+ 	 
+ 	 
+ 	/** 
+ 		Creates dot and places it on face of domino 
+ 		@param parent	face of domino to which the dot should be added on 
+ 		@param leftPos	left position of dot 
+ 		@param topPos	top position of dot 
+ 	**/ 
+ 	function createDot(parent, leftPos, topPos){ 
+ 		var dot = document.createElement("div"); 
+ 		dot.setAttribute("class", "circle"); 
+ 		parent.appendChild(dot); 
+ 		dot.style.position = "absolute"; 
+ 		dot.style.left = leftPos + "px"; 
+ 		dot.style.top = topPos + "px"; 
+ 	} 
+ 	 
+ 	/** 
+ 		Creates button 
+ 		@param value	text value of button 
+ 	**/ 
+ 	function createButton(value){ 
+ 		var btn = document.createElement("input"); 
+ 		btn.setAttribute("type", "button"); 
+ 		btn.setAttribute("value", value); 
+ 		return btn; 
+ 	} 
+ 	 
+ 	/** 
+ 		Rotates the domino display object 
+ 		@param direction	the direction of rotation. If value is "clockwise" then rotates clockwise otherwise rotates counter-clockwise. 
+ 	**/ 
+	function rotate(direction){ 
+ 		//Detects browser prefix - copied from http://davidwalsh.name/vendor-prefix 
+ 		 
+		var styles = window.getComputedStyle(document.documentElement, ''); 
+ 		var cssPrefix = (Array.prototype.slice.call(styles).join('').match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o']))[1]; 
+ 		if(cssPrefix) { 
+ 			domino.rotate = domino.rotate || 0; 
+ 			if(direction != "clockwise"){ 
+ 				domino.rotate += -90; 
+ 			}else{ 
+ 				domino.rotate += 90; 
+ 			} 
+ 			domino.rotate %= 360; 
+ 			var patt = /rotate\(-?\d+deg\)/ig; 
+ 			 
+ 			domino.getDisplay().style.webkitTransform = (domino.getDisplay().style.webkitTransform + "").replace(patt, "") + "rotate(" + domino.rotate + "deg)"; 
+ 			domino.getDisplay().style.msTransform = (domino.getDisplay().style.msTransform + "").replace(patt, "") + "rotate(" + domino.rotate + "deg)"; 
+ 			domino.getDisplay().style.MozTransform = (domino.getDisplay().style.MozTransform + "").replace(patt, "") + "rotate(" + domino.rotate + "deg)"; 
+ 			domino.getDisplay().style.OTransform = (domino.getDisplay().style.OTransform + "").replace(patt, "") + "rotate(" + domino.rotate + "deg)"; 
+ 			domino.getDisplay().style.transform = (domino.getDisplay().style.transform + "").replace(patt, "") + "rotate(" + domino.rotate + "deg)"; 
+ 		} 
+ 	} 
+ 	 
+ 	function onWindowResize(){ 
+ 		scale(); 
+ 	} 
+ 	function scale(){ 
+ 		var patt = /scale\(-?\d*.?\d+(, -?\d*.?\d+)?\)/ig; 
+ 		var boxDim = 0; 
+ 		var scale = 1; 
+ 		if(window.innerHeight > window.innerWidth){ 
+ 			boxDim = window.innerWidth/2; 
+ 		}else{ 
+ 			boxDim = window.innerHeight/2; 
+ 		} 
+ 		if(domino.getDisplay().style.width > domino.getDisplay().style.height){ 
+ 			scale = boxDim/parseInt(domino.getDisplay().style.width); 
+ 		}else{ 
+ 			scale = boxDim/parseInt(domino.getDisplay().style.height); 
+ 		} 
+ 		 
+ 		domino.getDisplay().style.webkitTransform = (domino.getDisplay().style.webkitTransform + "").replace(patt, "") + "scale(" + scale + ", " + scale + ")"; 
+ 		domino.getDisplay().style.msTransform = (domino.getDisplay().style.msTransform + "").replace(patt, "") + "scale(" + scale + ", " + scale + ")"; 
+ 		domino.getDisplay().style.MozTransform = (domino.getDisplay().style.MozTransform + "").replace(patt, "") + "scale(" + scale + ", " + scale + ")"; 
+ 		domino.getDisplay().style.OTransform = (domino.getDisplay().style.OTransform + "").replace(patt, "") + "scale(" + scale + ", " + scale + ")"; 
+ 		domino.getDisplay().style.transform = (domino.getDisplay().style.transform + "").replace(patt, "") + "scale(" + scale + ", " + scale + ")"; 
+ 		 
+ 		domino.getDisplay().style.left = (window.innerWidth - parseInt(domino.getDisplay().style.width) * scale)/2 + "px"; 
+ 		domino.getDisplay().style.top = (window.innerHeight - parseInt(domino.getDisplay().style.height) * scale)/2 + "px"; 
+	} 
+ 	 
+ 	 
+ 	/** Start of program **/ 
+ 	 
+ 	var counter_clockwiseBtn = createButton("counter_clockwise"); 
+ 	document.getElementById("stage").appendChild(counter_clockwiseBtn); 
+ 	counter_clockwiseBtn.addEventListener("click", function(){rotate("counter_clockwise")}); 
+ 	 
+ 	var clockwiseBtn = createButton("clockwise"); 
+ 	document.getElementById("stage").appendChild(clockwiseBtn); 
+ 	clockwiseBtn.addEventListener("click", function(){rotate("clockwise")}); 
+ 	 
+ 	 
+ 	var domino = new Domino(); 
+ 	document.getElementById("stage").appendChild(domino.getDisplay()); 
+ 	 
+ 	scale(); 
+ 	 
+ 	window.addEventListener("resize", onWindowResize); 
+ 	 
+ </script> 
+ 
+ 
+ </body> 
+ </html> 
